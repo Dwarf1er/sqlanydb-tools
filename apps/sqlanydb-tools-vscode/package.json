@@ -17,7 +17,25 @@
         "command": "sqlanydb-tools-vscode.helloWorld",
         "title": "Hello World"
       }
-    ]
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "sqlanydb-tools",
+          "title": "SAP SQL Anywhere 17 Tools",
+          "icon": "resources/sqlanydb-tools.svg"
+        }
+      ]
+    },
+    "views": {
+      "sqlanydb-tools": [
+        {
+          "id": "sqlanydb-manager",
+          "name": "SAP SQL Anywhere 17 Database Manager",
+          "type": "tree"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run package",
