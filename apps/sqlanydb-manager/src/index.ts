@@ -58,17 +58,25 @@ export const resetDatabase = async (
     console.warn(`Database is not running or could not stop database ${databaseName}: ${err.message}`);
   });
 
+  const dbFilePath = path.join(databaseConfiguration.path, `${databaseConfiguration.name}.db`);
+  if (fs.existsSync(dbFilePath)) {
+    await fs.promises.rm(dbFilePath, { force: true });
+  }
+
   return new Promise((resolve, reject) => {
     fs.createReadStream(archivePath)
-      .pipe(unzipper.Extract({ path: databaseConfiguration.archivePath }))
-      .on("close", () => {
-        const extractedArchivePath = path.join(archivePath, databaseConfiguration.name);
+      .pipe(unzipper.Extract({ path: databaseConfiguration.path }))
+      .on("close", async () => {
+        const extractedFiles = await fs.promises.readdir(databaseConfiguration.path);
+        const dbFiles = extractedFiles.filter((file) => file.endsWith(".db"));
 
-        if (fs.existsSync(extractedArchivePath)) {
-          fs.renameSync(extractedArchivePath, databaseConfiguration.path);
-          resolve(`Database ${databaseName} has been reset from archive: ${databaseConfiguration.archivePath}`);
+        if (dbFiles.length === 1) {
+          const extractedDbPath = path.join(databaseConfiguration.path, dbFiles[0]);
+
+          await fs.promises.rename(extractedDbPath, dbFilePath);
+          resolve(`Database ${databaseName} has been reset from archive: ${archivePath}`);
         } else {
-          reject(new Error(`Extracted database file not found after extraction: ${databaseConfiguration.path}}`));
+          reject(new Error(`Expected one .db file after extraction, found: ${dbFiles.length}`));
         }
       })
       .on("error", (error) => {
