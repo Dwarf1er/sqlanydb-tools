@@ -1,16 +1,8 @@
 import * as fs from "fs";
 import * as path from "path";
+import { DatabaseConfiguration } from "./databaseConfiguration";
 
-export interface DatabaseConfiguration {
-    name: string;
-    path: string;
-    archivePath?: string;
-    serverPort?: string;
-    httpPort?: string;
-    cacheSize?: string;
-}
-
-class DatabaseConfigurationManager {
+export class DatabaseConfigurationManager {
     private configurationPath: string;
     private configuration: DatabaseConfiguration[];
 

@@ -1,5 +1,5 @@
 import { exec, spawn } from "child_process";
-import { DatabaseConfiguration, databaseConfigurationManager } from "./databaseConfiguration";
+import { DatabaseConfiguration, databaseConfigurationManager } from "@sqlanydb-tools/sqlanydb-config";
 import * as fs from "fs";
 import * as path from "path";
 import * as unzipper from "unzipper";
