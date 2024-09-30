@@ -1,41 +1,42 @@
 import * as fs from "fs";
-import * as path from "path";
 import { DatabaseConfiguration } from "./databaseConfiguration";
 
 export class DatabaseConfigurationManager {
-    private configurationPath: string;
-    private configuration: DatabaseConfiguration[];
+  private configurationPath: string;
+  private configuration: DatabaseConfiguration[];
 
-    constructor() {
-        this.configurationPath = path.join(__dirname, "../config.json");
-        this.configuration = this.loadConfiguration();
+  constructor(configurationPath?: string, workspaceSettings?: DatabaseConfiguration[]) {
+    if (!configurationPath && (!workspaceSettings || workspaceSettings.length === 0)) {
+      throw new Error("You must provide either a configuration path or non-empty workspace settings.");
     }
 
-    public saveConfiguration() {
-        fs.writeFileSync(this.configurationPath, JSON.stringify(this.configuration, null, 4));
-    }
+    this.configurationPath = configurationPath || "";
+    this.configuration = workspaceSettings || this.loadConfiguration();
+  }
 
-    public getDatabases(): DatabaseConfiguration[] {
-        return this.configuration;
-    }
+  public saveConfiguration() {
+    fs.writeFileSync(this.configurationPath, JSON.stringify(this.configuration, null, 4));
+  }
 
-    public addDatabase(database: DatabaseConfiguration) {
-        this.configuration.push(database);
-        this.saveConfiguration();
-    }
+  public getDatabases(): DatabaseConfiguration[] {
+    return this.configuration;
+  }
 
-    public removeDatabase(databaseName: string) {
-        this.configuration = this.configuration.filter(database => database.name !== databaseName);
-        this.saveConfiguration();
-    }
+  public addDatabase(database: DatabaseConfiguration) {
+    this.configuration.push(database);
+    this.saveConfiguration();
+  }
 
-    private loadConfiguration(): DatabaseConfiguration[] {
-        if (fs.existsSync(this.configurationPath)) {
-            const data = fs.readFileSync(this.configurationPath, "utf-8");
-            return JSON.parse(data) as DatabaseConfiguration[];
-        }
-        return [];
+  public removeDatabase(databaseName: string) {
+    this.configuration = this.configuration.filter((database) => database.name !== databaseName);
+    this.saveConfiguration();
+  }
+
+  private loadConfiguration(): DatabaseConfiguration[] {
+    if (fs.existsSync(this.configurationPath)) {
+      const data = fs.readFileSync(this.configurationPath, "utf-8");
+      return JSON.parse(data) as DatabaseConfiguration[];
     }
+    return [];
+  }
 }
-
-export const databaseConfigurationManager = new DatabaseConfigurationManager();

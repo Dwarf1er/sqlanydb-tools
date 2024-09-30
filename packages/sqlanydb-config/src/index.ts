@@ -1,2 +1,2 @@
-export * from './databaseConfiguration';
-export * from './databaseConfigurationManager';
+export * from "./databaseConfiguration";
+export * from "./databaseConfigurationManager";

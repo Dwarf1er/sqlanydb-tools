@@ -1,10 +1,10 @@
 [
-    {
-        "name": "TestDatabase1",
-        "path": "/path/to/test/database1",
-        "archivePath": "/path/to/archive/database1.zip",
-        "serverPort": "1234",
-        "httpPort": "8080",
-        "cacheSize": "256MB"
-    }
+  {
+    "name": "TestDatabase1",
+    "path": "/path/to/test/database1",
+    "archivePath": "/path/to/archive/database1.zip",
+    "serverPort": "1234",
+    "httpPort": "8080",
+    "cacheSize": "256MB"
+  }
 ]

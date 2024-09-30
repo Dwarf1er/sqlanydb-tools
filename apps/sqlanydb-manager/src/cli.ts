@@ -1,65 +1,75 @@
-import { Command } from 'commander';
-import { startDatabase, stopDatabase, resetDatabase, listDatabase } from './index';
+import { Command } from "commander";
+import { DatabaseConfigurationManager } from "@sqlanydb-tools/sqlanydb-config";
+import { startDatabase, stopDatabase, resetDatabase, listDatabase } from "./index";
+import * as path from "path";
+import * as fs from "fs";
+
+const cliConfigPath = path.join(__dirname, "config.json");
+if (!fs.existsSync(cliConfigPath)) {
+  console.error(
+    `Configuration file not found at '${cliConfigPath}'. Please create a 'config.json' file in the same directory.`
+  );
+  process.exit(1);
+}
+
+const databaseConfigurationManager = new DatabaseConfigurationManager(cliConfigPath);
 
 const program = new Command();
 
-program
-  .name('sqlanydb-manager')
-  .description('CLI for managing SAP SQL Anywhere 17 databases')
-  .version('0.0.1');
+program.name("sqlanydb-manager").description("CLI for managing SAP SQL Anywhere 17 databases").version("0.0.1");
 
 program
-  .command('start <databaseName>')
-  .description('Start a database')
+  .command("start <databaseName>")
+  .description("Start a database")
   .action(async (databaseName) => {
     try {
-      await startDatabase(databaseName);
+      await startDatabase(databaseName, databaseConfigurationManager);
     } catch (error) {
       if (error instanceof Error) {
         console.error(error.message);
       } else {
-        console.error('An unknown error occurred.');
+        console.error("An unknown error occurred.");
       }
     }
   });
 
 program
-  .command('stop <databaseName>')
-  .description('Stop a database')
+  .command("stop <databaseName>")
+  .description("Stop a database")
   .action(async (databaseName) => {
     try {
-      const result = await stopDatabase(databaseName);
+      const result = await stopDatabase(databaseName, databaseConfigurationManager);
       console.log(result);
     } catch (error) {
       if (error instanceof Error) {
         console.error(error.message);
       } else {
-        console.error('An unknown error occurred.');
+        console.error("An unknown error occurred.");
       }
     }
   });
 
 program
-  .command('reset <databaseName>')
-  .description('Reset a database from its archive')
+  .command("reset <databaseName>")
+  .description("Reset a database from its archive")
   .action(async (databaseName) => {
     try {
-      const result = await resetDatabase(databaseName);
+      const result = await resetDatabase(databaseName, databaseConfigurationManager);
       console.log(result);
     } catch (error) {
       if (error instanceof Error) {
         console.error(error.message);
       } else {
-        console.error('An unknown error occurred.');
+        console.error("An unknown error occurred.");
       }
     }
   });
 
 program
-  .command('list')
-  .description('List all databases')
+  .command("list")
+  .description("List all databases")
   .action(() => {
-    const databases = listDatabase();
+    const databases = listDatabase(databaseConfigurationManager);
     console.log(databases);
   });
 
