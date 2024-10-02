@@ -33,6 +33,10 @@ class DatabaseTreeDataProvider implements vscode.TreeDataProvider<DatabaseTreeIt
 	}
 }
 
+function delay(ms: number) {
+	return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 export function activate(context: vscode.ExtensionContext) {
 	const workspaceConfiguration = getDatabaseConfiguration();
 	const databaseConfigurationManager = new DatabaseConfigurationManager(undefined, workspaceConfiguration);
@@ -65,6 +69,7 @@ export function activate(context: vscode.ExtensionContext) {
 			const databases = treeDataProvider.getChildren();
 			if (databases.length > 0) {
 				await startDatabase(databases[0].databaseConfiguration.name, databaseConfigurationManager);
+				await delay(200);
 				await updateDatabaseRunningContext();
 			}
 		}),
@@ -72,6 +77,7 @@ export function activate(context: vscode.ExtensionContext) {
 			const databases = treeDataProvider.getChildren();
 			if (databases.length > 0) {
 				await stopDatabase(databases[0].databaseConfiguration.name, databaseConfigurationManager);
+				await delay(200);
 				await updateDatabaseRunningContext();
 			}
 		}),
@@ -79,6 +85,7 @@ export function activate(context: vscode.ExtensionContext) {
 			const databases = treeDataProvider.getChildren();
 			if (databases.length > 0) {
 				await resetDatabase(databases[0].databaseConfiguration.name, databaseConfigurationManager);
+				await delay(200);
 				await updateDatabaseRunningContext();
 			}
 		})
