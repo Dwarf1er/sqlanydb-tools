@@ -11,6 +11,7 @@
 	],
 	"activationEvents": [],
 	"main": "./dist/extension.js",
+	"types": "./dist/extension.d.ts",
 	"contributes": {
 		"commands": [
 			{
@@ -39,10 +40,63 @@
 			"sqlanydb-tools": [
 				{
 					"id": "sqlanydb-manager",
-					"name": "SAP SQL Anywhere 17 Database Manager",
+					"name": "Database Manager",
 					"type": "tree"
 				}
 			]
+		},
+		"configuration": {
+			"type": "object",
+			"title": "SAP SQL Anywhere 17 Tools",
+			"properties": {
+				"sqlanydb-tools-vscode.databases": {
+					"type": "array",
+					"default": [
+						{
+							"name": "TestDatabase1",
+							"path": "/path/to/test/database1",
+							"archivePath": "/path/to/archive/database1.zip",
+							"serverPort": "1234",
+							"httpPort": "8080",
+							"cacheSize": "256M"
+						}
+					],
+					"description": "List of database configurations",
+					"items": {
+						"type": "object",
+						"properties": {
+							"name": {
+								"type": "string",
+								"description": "The name of the database file, without the .db extension"
+							},
+							"path": {
+								"type": "string",
+								"description": "The path to the database .db file"
+							},
+							"archivePath": {
+								"type": "string",
+								"description": "The path to the .zip archive file"
+							},
+							"serverPort": {
+								"type": "string",
+								"description": "The server port for the database"
+							},
+							"httpPort": {
+								"type": "string",
+								"description": "The HTTP port for the database"
+							},
+							"cacheSize": {
+								"type": "string",
+								"description": "The cache size for the database"
+							}
+						},
+						"required": [
+							"name",
+							"path"
+						]
+					}
+				}
+			}
 		}
 	},
 	"scripts": {
@@ -54,7 +108,8 @@
 		"watch-tests": "tsc -p . -w --outDir out",
 		"pretest": "npm run compile-tests && npm run compile && npm run lint",
 		"lint": "eslint src",
-		"test": "vscode-test"
+		"test": "vscode-test",
+		"build": "tsc"
 	},
 	"dependencies": {
 		"@sqlanydb-tools/sqlanydb-config": "*",

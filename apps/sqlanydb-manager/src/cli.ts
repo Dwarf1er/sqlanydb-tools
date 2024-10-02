@@ -1,6 +1,6 @@
 import { Command } from "commander";
 import { DatabaseConfigurationManager } from "@sqlanydb-tools/sqlanydb-config";
-import { startDatabase, stopDatabase, resetDatabase, listDatabase } from "./databaseManager";
+import { startDatabase, stopDatabase, resetDatabase, listDatabase } from "./database-manager";
 import * as path from "path";
 import * as fs from "fs";
 

@@ -1,26 +1,64 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
-import * as vscode from 'vscode';
+import * as vscode from "vscode";
+import { DatabaseConfiguration, DatabaseConfigurationManager } from "@sqlanydb-tools/sqlanydb-config";
+import { startDatabase, stopDatabase, resetDatabase } from "@sqlanydb-tools/sqlanydb-manager";
 
-// This method is called when your extension is activated
-// Your extension is activated the very first time the command is executed
-export function activate(context: vscode.ExtensionContext) {
+const getDatabaseConfigurations = (): DatabaseConfiguration[] => {
+	const config = vscode.workspace.getConfiguration("sqlanydb-tools-vscode");
+	return config.get<DatabaseConfiguration[]>("databases") || [];
+};
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "sqlanydb-tools-vscode" is now active!');
-
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	const disposable = vscode.commands.registerCommand('sqlanydb-tools-vscode.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from sqlanydb-tools-vscode!');
-	});
-
-	context.subscriptions.push(disposable);
+class DatabaseTreeItem extends vscode.TreeItem {
+	constructor(public readonly dbConfig: DatabaseConfiguration) {
+		super(dbConfig.name, vscode.TreeItemCollapsibleState.None);
+		this.command = {
+			command: "sqlanydb-tools-vscode.startDatabase",
+			title: "Start Database",
+			arguments: [dbConfig.name],
+		};
+	}
 }
 
-// This method is called when your extension is deactivated
+class DatabaseTreeDataProvider implements vscode.TreeDataProvider<DatabaseTreeItem> {
+	private _onDidChangeTreeData: vscode.EventEmitter<void> = new vscode.EventEmitter<void>();
+	readonly onDidChangeTreeData: vscode.Event<void> = this._onDidChangeTreeData.event;
+
+	constructor(private databaseManager: DatabaseConfigurationManager) {}
+
+	getTreeItem(element: DatabaseTreeItem): vscode.TreeItem {
+		return element;
+	}
+
+	getChildren(): DatabaseTreeItem[] {
+		const databases = this.databaseManager.getDatabases();
+		return databases.map((dbConfig) => new DatabaseTreeItem(dbConfig));
+	}
+
+	refresh() {
+		this._onDidChangeTreeData.fire();
+	}
+}
+
+export function activate(context: vscode.ExtensionContext) {
+	const workspaceSettings = getDatabaseConfigurations();
+	const databaseConfigManager = new DatabaseConfigurationManager(undefined, workspaceSettings);
+	const treeDataProvider = new DatabaseTreeDataProvider(databaseConfigManager);
+
+	vscode.window.createTreeView("sqlanydb-manager", { treeDataProvider });
+
+	context.subscriptions.push(
+		vscode.commands.registerCommand("sqlanydb-tools-vscode.startDatabase", async (dbName: string) => {
+			await startDatabase(dbName, databaseConfigManager);
+			treeDataProvider.refresh();
+		}),
+		vscode.commands.registerCommand("sqlanydb-tools-vscode.stopDatabase", async (dbName: string) => {
+			await stopDatabase(dbName, databaseConfigManager);
+			treeDataProvider.refresh();
+		}),
+		vscode.commands.registerCommand("sqlanydb-tools-vscode.resetDatabase", async (dbName: string) => {
+			await resetDatabase(dbName, databaseConfigManager);
+			treeDataProvider.refresh();
+		})
+	);
+}
+
 export function deactivate() {}

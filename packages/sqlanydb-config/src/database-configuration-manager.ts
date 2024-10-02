@@ -1,5 +1,5 @@
 import * as fs from "fs";
-import { DatabaseConfiguration } from "./databaseConfiguration";
+import { DatabaseConfiguration } from "./database-configuration";
 
 export class DatabaseConfigurationManager {
 	private configurationPath: string;
