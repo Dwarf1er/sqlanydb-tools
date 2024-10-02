@@ -100,6 +100,23 @@ const executeCommand = (command: string): Promise<string> => {
 	});
 };
 
+export const pingDatabase = async (
+	databaseName: string,
+	databaseConfigurationManager: DatabaseConfigurationManager
+): Promise<boolean> => {
+	const databaseConfiguration = await findDatabaseConfiguration(databaseName, databaseConfigurationManager);
+
+	const command = `dbping -c "DBN=${databaseConfiguration.name}"`;
+
+	try {
+		const result = await executeCommand(command);
+		return result.includes("Ping server successful.");
+	} catch (error) {
+		console.error(`Ping failed for database ${databaseName}: ${error}`);
+		return false;
+	}
+};
+
 const executeDetachedCommand = (command: string): Promise<void> => {
 	return new Promise((resolve) => {
 		const cmdParts = command.split(" ");

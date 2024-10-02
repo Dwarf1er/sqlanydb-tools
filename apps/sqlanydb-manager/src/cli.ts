@@ -1,6 +1,6 @@
 import { Command } from "commander";
 import { DatabaseConfigurationManager } from "@sqlanydb-tools/sqlanydb-config";
-import { startDatabase, stopDatabase, resetDatabase, listDatabase } from "./database-manager";
+import { startDatabase, stopDatabase, resetDatabase, listDatabase, pingDatabase } from "./database-manager";
 import * as path from "path";
 import * as fs from "fs";
 
@@ -71,6 +71,18 @@ program
 	.action(() => {
 		const databases = listDatabase(databaseConfigurationManager);
 		console.log(databases);
+	});
+
+program
+	.command("ping <databaseName>")
+	.description("Ping a database to check if it's running")
+	.action(async (databaseName) => {
+		try {
+			const isRunning = await pingDatabase(databaseName, databaseConfigurationManager);
+			console.log(`Database ${databaseName} is ${isRunning ? "running" : "not reachable"}.`);
+		} catch (error) {
+			console.error(error instanceof Error ? error.message : "An unknown error occurred.");
+		}
 	});
 
 program.parse(process.argv);

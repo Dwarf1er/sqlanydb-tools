@@ -14,22 +14,12 @@ export class DatabaseConfigurationManager {
 		this.configuration = workspaceSettings || this.loadConfiguration();
 	}
 
-	public saveConfiguration() {
-		fs.writeFileSync(this.configurationPath, JSON.stringify(this.configuration, null, 4));
+	public updateConfiguration(newConfiguration: DatabaseConfiguration[]): void {
+		this.configuration = newConfiguration;
 	}
 
 	public getDatabases(): DatabaseConfiguration[] {
 		return this.configuration;
-	}
-
-	public addDatabase(database: DatabaseConfiguration) {
-		this.configuration.push(database);
-		this.saveConfiguration();
-	}
-
-	public removeDatabase(databaseName: string) {
-		this.configuration = this.configuration.filter((database) => database.name !== databaseName);
-		this.saveConfiguration();
 	}
 
 	private loadConfiguration(): DatabaseConfiguration[] {
