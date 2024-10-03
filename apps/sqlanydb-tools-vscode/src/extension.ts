@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { DatabaseConfiguration, DatabaseConfigurationManager } from "@sqlanydb-tools/sqlanydb-config";
-import { startDatabase, stopDatabase, resetDatabase, pingDatabase } from "@sqlanydb-tools/sqlanydb-manager";
+import { startDatabase, stopDatabase, resetDatabase, pingDatabaseWithRetry } from "@sqlanydb-tools/sqlanydb-manager";
 
 const getDatabaseConfiguration = (): DatabaseConfiguration[] => {
 	const workspaceConfiguration = vscode.workspace.getConfiguration("sqlanydb-tools-vscode");
@@ -47,7 +47,7 @@ export function activate(context: vscode.ExtensionContext) {
 	const updateDatabaseRunningContext = async () => {
 		const databases = treeDataProvider.getChildren();
 		if (databases.length > 0) {
-			const databaseIsRunning = await pingDatabase(
+			const databaseIsRunning = await pingDatabaseWithRetry(
 				databases[0].databaseConfiguration.name,
 				databaseConfigurationManager
 			);
@@ -68,25 +68,52 @@ export function activate(context: vscode.ExtensionContext) {
 		vscode.commands.registerCommand("sqlanydb-tools-vscode.startDatabase", async () => {
 			const databases = treeDataProvider.getChildren();
 			if (databases.length > 0) {
-				await startDatabase(databases[0].databaseConfiguration.name, databaseConfigurationManager);
-				await delay(200);
-				await updateDatabaseRunningContext();
+				const databaseName = databases[0].databaseConfiguration.name;
+
+				await vscode.window.withProgress(
+					{
+						title: "Starting Database...",
+						location: vscode.ProgressLocation.Notification,
+					},
+					async () => {
+						await startDatabase(databaseName, databaseConfigurationManager);
+						await updateDatabaseRunningContext();
+					}
+				);
 			}
 		}),
 		vscode.commands.registerCommand("sqlanydb-tools-vscode.stopDatabase", async () => {
 			const databases = treeDataProvider.getChildren();
 			if (databases.length > 0) {
-				await stopDatabase(databases[0].databaseConfiguration.name, databaseConfigurationManager);
-				await delay(200);
-				await updateDatabaseRunningContext();
+				const databaseName = databases[0].databaseConfiguration.name;
+
+				await vscode.window.withProgress(
+					{
+						title: "Stopping Database...",
+						location: vscode.ProgressLocation.Notification,
+					},
+					async () => {
+						await stopDatabase(databaseName, databaseConfigurationManager);
+						await updateDatabaseRunningContext();
+					}
+				);
 			}
 		}),
 		vscode.commands.registerCommand("sqlanydb-tools-vscode.resetDatabase", async () => {
 			const databases = treeDataProvider.getChildren();
 			if (databases.length > 0) {
-				await resetDatabase(databases[0].databaseConfiguration.name, databaseConfigurationManager);
-				await delay(200);
-				await updateDatabaseRunningContext();
+				const databaseName = databases[0].databaseConfiguration.name;
+
+				await vscode.window.withProgress(
+					{
+						title: "Resetting Database...",
+						location: vscode.ProgressLocation.Notification,
+					},
+					async () => {
+						await resetDatabase(databaseName, databaseConfigurationManager);
+						await updateDatabaseRunningContext();
+					}
+				);
 			}
 		})
 	);

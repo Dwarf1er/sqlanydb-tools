@@ -117,6 +117,27 @@ export const pingDatabase = async (
 	}
 };
 
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+const exponentialBackoff = (attempt: number) => Math.min(10000, Math.pow(2, attempt) * 100);
+
+export const pingDatabaseWithRetry = async (
+	databaseName: string,
+	databaseConfigurationManager: DatabaseConfigurationManager,
+	retries: number = 3
+): Promise<boolean> => {
+	for (let attempt = 0; attempt < retries; attempt++) {
+		const databaseIsRunning = await pingDatabase(databaseName, databaseConfigurationManager);
+		if (databaseIsRunning) {
+			return true;
+		}
+
+		const waitTime = exponentialBackoff(attempt);
+		await delay(waitTime);
+	}
+
+	return false;
+};
+
 const executeDetachedCommand = (command: string): Promise<void> => {
 	return new Promise((resolve) => {
 		const cmdParts = command.split(" ");

@@ -27,7 +27,7 @@
 			{
 				"command": "sqlanydb-tools-vscode.resetDatabase",
 				"title": "Reset Database",
-				"icon": "$(debug-restart)"
+				"icon": "$(refresh)"
 			}
 		],
 		"menus": {
