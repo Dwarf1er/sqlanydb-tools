@@ -63,6 +63,18 @@ export const resetDatabase = async (
 		await fs.promises.rm(dbFilePath, { force: true });
 	}
 
+	try {
+		const logFiles = (await fs.promises.readdir(databaseConfiguration.path)).filter((logFile) =>
+			logFile.endsWith(".log")
+		);
+		for (const logFile of logFiles) {
+			const logFilePath = path.join(databaseConfiguration.path, logFile);
+			await fs.promises.rm(logFilePath, { force: true });
+		}
+	} catch (error) {
+		console.error("Error while reading or deleting log files: ", error);
+	}
+
 	return new Promise((resolve, reject) => {
 		fs.createReadStream(archivePath)
 			.pipe(unzipper.Extract({ path: databaseConfiguration.path }))
