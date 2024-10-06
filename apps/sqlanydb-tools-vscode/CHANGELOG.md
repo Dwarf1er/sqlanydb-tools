@@ -1,5 +1,14 @@
 # sqlanydb-tools-vscode
 
+## 0.1.1
+
+### Patch Changes
+
+- 878cc4f: Changeset configuration fixes
+- Updated dependencies [878cc4f]
+  - @sqlanydb-tools/sqlanydb-manager@1.1.1
+  - @sqlanydb-tools/sqlanydb-config@1.1.1
+
 ## 0.1.0
 
 ### Minor Changes
