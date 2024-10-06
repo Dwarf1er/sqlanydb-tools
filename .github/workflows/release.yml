@@ -33,9 +33,24 @@ jobs:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                   NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-            - name: Publish VSCode Extension
-              if: steps.changesets.output.published == 'true'
-              run: npm run publish:extension
+            - name: Get New VSCode Extension changeset
+              run: |
+                  if [ "${{ steps.changesets.outputs.hasChangesets }}" == "true" ]; then
+                    CHANGED_PACKAGES=$(echo "${{ steps.changesets.outputs.changesets }}" | jq -r '.[].packages[]')
+
+                    if echo "$CHANGED_PACKAGES" | grep -q "sqlanydb-tools-vscode"; then
+                      echo "VSCODE_CHANGED=true" >> $GITHUB_ENV
+                    else
+                      echo "VSCODE_CHANGED=false" >> $GITHUB_ENV
+                    fi
+                  else
+                      echo "VSCODE_CHANGED=false" >> $GITHUB_ENV
+                  fi
+
+            - name: Build and Publish VSCode Extension
+              if: env.VSCODE_CHANGED == 'true'
+              run: |
+                  cd ./apps/sqlanydb-tools-vscode
+                  npm run publish
               env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                   VSCE_TOKEN: ${{ secrets.VSCE_TOKEN }}
