@@ -3,7 +3,7 @@
 	"displayName": "sqlanydb-tools-vscode",
 	"description": "Manage SAP SQL Anwyhere 17 Databases from VSCode",
 	"icon": "resources/sqlanydb-tools-logo.png",
-	"version": "1.0.0",
+	"version": "0.0.0",
 	"engines": {
 		"vscode": "^1.93.0"
 	},
