@@ -47,6 +47,9 @@ jobs:
                       echo "VSCODE_CHANGED=false" >> $GITHUB_ENV
                   fi
 
+            - name: Debug
+              run: echo "VSCODE_CHANGED=${{ env.VSCODE_CHANGED }}"
+
             - name: Build and Publish VSCode Extension
               if: env.VSCODE_CHANGED == 'true'
               run: |
