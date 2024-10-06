@@ -36,7 +36,7 @@ yarn-error.log*
 # Misc
 .DS_Store
 *.pem
-config.json
+apps/sqlanydb-manager/src/config.json
 
 # VSCode
 .vscode-test/
