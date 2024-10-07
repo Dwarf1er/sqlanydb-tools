@@ -140,8 +140,8 @@
 		"build": "tsc"
 	},
 	"dependencies": {
-		"@sqlanydb-tools/sqlanydb-config": "*",
-		"@sqlanydb-tools/sqlanydb-manager": "*"
+		"@sqlanydb-tools/sqlanydb-config": "workspace:*",
+		"@sqlanydb-tools/sqlanydb-manager": "workspace:*"
 	},
 	"devDependencies": {
 		"@types/mocha": "^10.0.7",
