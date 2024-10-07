@@ -24,6 +24,15 @@ jobs:
             - name: Install Dependencies
               run: npm install
 
+            - name: Debug Environment
+              run: |
+                  echo "Current Directory:"
+                  pwd
+                  echo "All Files:"
+                  ls -la
+                  echo "Contents of .changeset Directory:"
+                  ls -la .changeset || echo "No .changeset directory found."
+
             - name: Create Release Pull Request or Publish to npm
               id: changesets
               uses: changesets/action@v1
