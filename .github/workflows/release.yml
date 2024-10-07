@@ -14,7 +14,9 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Checkout Repo
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 2
 
             - name: Setup Node.js 22.x
               uses: actions/setup-node@v3
@@ -23,6 +25,9 @@ jobs:
 
             - name: Install Dependencies
               run: npm install
+
+            - name: Build
+              run: npm run build
 
             - name: Get New VSCode Extension changeset
               run: |
