@@ -24,33 +24,6 @@ jobs:
             - name: Install Dependencies
               run: npm install
 
-            - name: Debug Environment
-              run: |
-                  echo "Current Directory:"
-                  pwd
-                  echo "All Files:"
-                  ls -la
-                  echo "Contents of .changeset Directory:"
-                  ls -la .changeset || echo "No .changeset directory found."
-
-            - name: Create Release Pull Request or Publish to npm
-              id: changesets
-              uses: changesets/action@v1
-              with:
-                  publish: npm run release
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                  NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-            - name: Debug Environment
-              run: |
-                  echo "Current Directory:"
-                  pwd
-                  echo "All Files:"
-                  ls -la
-                  echo "Contents of .changeset Directory:"
-                  ls -la .changeset || echo "No .changeset directory found."
-
             - name: Get New VSCode Extension changeset
               run: |
                   changeset_files=$(find .changeset -name '*.md')
@@ -68,6 +41,15 @@ jobs:
                   else
                     echo "VSCODE_CHANGED=false" >> $GITHUB_ENV
                   fi
+
+            - name: Create Release Pull Request or Publish to npm
+              id: changesets
+              uses: changesets/action@v1
+              with:
+                  publish: npm run release
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
             - name: Build and Publish VSCode Extension
               if: env.VSCODE_CHANGED == 'true'
