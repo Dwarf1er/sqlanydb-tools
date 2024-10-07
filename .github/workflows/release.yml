@@ -33,6 +33,15 @@ jobs:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                   NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
+            - name: Debug Environment
+              run: |
+                  echo "Current Directory:"
+                  pwd
+                  echo "All Files:"
+                  ls -la
+                  echo "Contents of .changeset Directory:"
+                  ls -la .changeset || echo "No .changeset directory found."
+
             - name: Get New VSCode Extension changeset
               run: |
                   changeset_files=$(find .changeset -name '*.md')
