@@ -11,7 +11,7 @@
 	"license": "ISC",
 	"description": "",
 	"dependencies": {
-		"@sqlanydb-tools/sqlanydb-config": "workspace:*",
+		"@sqlanydb-tools/sqlanydb-config": "*",
 		"commander": "^12.1.0",
 		"unzipper": "^0.12.3"
 	},
