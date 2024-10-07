@@ -45,7 +45,7 @@ jobs:
 
             - name: Debug
               run: |
-                  echo ${{ VSCODE_CHANGED }}
+                  echo ${{ env.VSCODE_CHANGED }}
                   echo ${{ steps.changesets.outputs.publishedPackages }}
 
             - name: Build and Publish VSCode Extension
