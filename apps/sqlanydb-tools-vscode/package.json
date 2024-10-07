@@ -140,6 +140,7 @@
 		"build": "tsc"
 	},
 	"dependencies": {
+		"@aws-sdk/client-s3": "^3.665.0",
 		"@sqlanydb-tools/sqlanydb-config": "*",
 		"@sqlanydb-tools/sqlanydb-manager": "*"
 	},
