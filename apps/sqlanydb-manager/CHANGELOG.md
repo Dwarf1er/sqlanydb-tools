@@ -1,5 +1,16 @@
 # @sqlanydb-tools/sqlanydb-manager
 
+## 1.2.0
+
+### Minor Changes
+
+- a195cc7: Changeset configuration fixes
+
+### Patch Changes
+
+- Updated dependencies [a195cc7]
+  - @sqlanydb-tools/sqlanydb-config@1.2.0
+
 ## 1.1.0
 
 ### Minor Changes

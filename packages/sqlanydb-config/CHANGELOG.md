@@ -1,5 +1,11 @@
 # @sqlanydb-tools/sqlanydb-config
 
+## 1.2.0
+
+### Minor Changes
+
+- a195cc7: Changeset configuration fixes
+
 ## 1.1.0
 
 ### Minor Changes
