@@ -139,6 +139,9 @@
 		"test": "vscode-test",
 		"build": "tsc"
 	},
+	"vsce": {
+		"dependencies": false
+	},
 	"dependencies": {
 		"@aws-sdk/client-s3": "^3.665.0",
 		"@sqlanydb-tools/sqlanydb-config": "*",
