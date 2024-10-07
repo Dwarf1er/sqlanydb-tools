@@ -22,7 +22,7 @@ jobs:
                   node-version: 22.x
 
             - name: Install Dependencies
-              run: npm install --workspaces
+              run: npm install
 
             - name: Get New VSCode Extension changeset
               run: |
