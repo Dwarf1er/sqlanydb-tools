@@ -54,6 +54,7 @@ jobs:
             - name: Build and Publish VSCode Extension
               if: env.VSCODE_CHANGED == 'true'
               run: |
+                  turbo run build
                   cd ./apps/sqlanydb-tools-vscode
                   npm run publish
               env:
