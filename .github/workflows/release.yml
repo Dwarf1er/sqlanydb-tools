@@ -35,7 +35,7 @@ jobs:
 
             - name: Get New VSCode Extension changeset
               run: |
-                  changeset_files=$(ls .changeset/*.md)
+                  changeset_files=$(ls ./.changeset/*.md)
                   found=false
 
                   for file in $changeset_files; do
