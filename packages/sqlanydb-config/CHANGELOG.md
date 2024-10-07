@@ -1,5 +1,11 @@
 # @sqlanydb-tools/sqlanydb-config
 
+## 1.2.2
+
+### Patch Changes
+
+- 81e59d9: Changeset configuration fixes
+
 ## 1.2.1
 
 ### Patch Changes
