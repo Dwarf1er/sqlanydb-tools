@@ -35,18 +35,21 @@ jobs:
 
             - name: Get New VSCode Extension changeset
               run: |
-                  packages=$(echo '${{ steps.changesets.outputs.publishedPackages }}' | jq -r '.[].name')
+                  changeset_files=$(ls .changeset/*.md)
+                  found=false
 
-                  if echo "$packages" | grep -q "sqlanydb-tools-vscode"; then
+                  for file in $changeset_files; do
+                    if grep -q "sqlanydb-tools-vscode" "$file"; then
+                      found=true
+                      break
+                    fi
+                  done
+
+                  if [ "$found" = true ]; then
                     echo "VSCODE_CHANGED=true" >> $GITHUB_ENV
                   else
                     echo "VSCODE_CHANGED=false" >> $GITHUB_ENV
                   fi
-
-            - name: Debug
-              run: |
-                  echo ${{ env.VSCODE_CHANGED }}
-                  echo ${{ steps.changesets.outputs.publishedPackages }}
 
             - name: Build and Publish VSCode Extension
               if: env.VSCODE_CHANGED == 'true'
