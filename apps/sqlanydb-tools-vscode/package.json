@@ -10,7 +10,7 @@
 		"url": "https://github.com/Dwarf1er/sqlanydb-tools",
 		"directory": "apps/sqlanydb-tools-vscode"
 	},
-	"version": "1.0.1",
+	"version": "0.0.0",
 	"private": "true",
 	"engines": {
 		"vscode": "^1.93.0"
@@ -132,6 +132,7 @@
 		"compile": "webpack",
 		"watch": "webpack --watch",
 		"package": "webpack --mode production --devtool hidden-source-map",
+		"package-vsix": "vsce package",
 		"compile-tests": "tsc -p . --outDir out",
 		"watch-tests": "tsc -p . -w --outDir out",
 		"pretest": "npm run compile-tests && npm run compile && npm run lint",
