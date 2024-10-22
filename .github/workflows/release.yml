@@ -62,22 +62,12 @@ jobs:
                   cd ./apps/sqlanydb-tools-vscode
                   npm run package-vsix
 
-            - name: List Files in Current Directory
-              if: env.VSCODE_CHANGED == 'true'
-              run: |
-                  cd ./apps/sqlanydb-tools-vscode
-                  echo "Current Directory: $(pwd)"
-                  ls -l
-
             - name: Upload VSIX to Release
               if: env.VSCODE_CHANGED == 'true'
-              uses: svenstaro/upload-release-action@v2
+              uses: xresloader/upload-to-github-release@v1
               with:
-                  repo_token: ${{ secrets.GITHUB_TOKEN }}
                   file: ./apps/sqlanydb-tools-vscode/sqlanydb-tools-vscode-*.vsix
-                  tag: ${{ github.ref }}
-                  overwrite: true
-                  body: "Uploaded VSIX for PR #${{ github.event.pull_request.number }}."
+                  tags: true
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
