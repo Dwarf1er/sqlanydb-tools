@@ -68,8 +68,8 @@ jobs:
               with:
                   repo_token: ${{ secrets.GITHUB_TOKEN }}
                   file: ./apps/sqlanydb-tools-vscode/*.vsix
-                  asset_name: sqlanydb-tools-vscode.vsix
-                  tag: ${{ github.event.pull_request.number }}
+                  asset_name: sqlanydb-tools-vscode-${{ github.ref }}.vsix
+                  tag: ${{ github.ref }}
                   overwrite: true
                   body: "Uploaded VSIX for PR #${{ github.event.pull_request.number }}."
               env:
