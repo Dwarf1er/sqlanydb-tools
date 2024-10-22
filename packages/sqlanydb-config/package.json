@@ -1,9 +1,9 @@
 {
 	"name": "@sqlanydb-tools/sqlanydb-config",
-	"version": "1.2.1",
+	"version": "0.0.0",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
-	"private": "true",
+	"private": "false",
 	"scripts": {
 		"build": "tsc"
 	},

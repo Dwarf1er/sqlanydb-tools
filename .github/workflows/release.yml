@@ -56,6 +56,25 @@ jobs:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                   NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
+            - name: Package VSCode Extension
+              if: env.VSCODE_CHANGED == 'true'
+              run: |
+                  cd ./apps/sqlanydb-tools-vscode
+                  npm run package-vsix
+
+            - name: Upload VSIX to Release
+              if: env.VSCODE_CHANGED == 'true'
+              uses: svenstaro/upload-release-action@v2
+              with:
+                  repo_token: ${{ secrets.GITHUB_TOKEN }}
+                  file: ./apps/sqlanydb-tools-vscode/*.vsix
+                  asset_name: sqlanydb-tools-vscode-${{ github.ref }}.vsix
+                  tag: ${{ github.ref }}
+                  overwrite: true
+                  body: "Uploaded VSIX for PR #${{ github.event.pull_request.number }}."
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
             - name: Build and Publish VSCode Extension
               if: env.VSCODE_CHANGED == 'true'
               run: |

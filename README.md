@@ -16,6 +16,7 @@ By bundling both command-line utilities and an integrated VSCode experience in a
         - [Complete toolbox for SAP SQL Anwyhere 17](#complete-toolbox-for-sap-sql-anwyhere-17)
 - [Project Description](#project-description)
 - [Table Of Contents](#table-of-contents)
+- [Feature Roadmap](#feature-roadmap)
 - [Installation](#installation)
   - [VSCode extension](#vscode-extension)
   - [sqlanydb-manager CLI](#sqlanydb-manager-cli)
@@ -27,6 +28,19 @@ By bundling both command-line utilities and an integrated VSCode experience in a
     - [sqlanydb-manager](#sqlanydb-manager)
   - [Running the VSCode extension](#running-the-vscode-extension)
 - [License](#license)
+
+# Feature Roadmap
+- sqlanydb-manager CLI tool: start, stop, reset and ping local databases            [X]
+  - accompanying feature support in sqlanydb-tools-vscode extension                 [X]
+- database connector through sajdbc4.jar & dbjdbc17.jar included with sql anywhere  [ ]
+  - accompanying feature support to run queries in sqlanydb-tools-vscode extension  [ ]
+- sql anywhere language parser with ANTLR                                           [ ]
+  - accompanying syntax highlighting in sqlanydb-tools-vscode extension             [ ]
+  - prettier-plugin-sqlanydb for sql anywhere auto formatting support               [ ]
+- LSP to suggest autocompletions based on database schema                           [ ]
+- sqlanydb-migrator CLI tool: migration support for database development            [ ]
+  - accompanying feature support in sqlanydb-tools-vscode extension                 [ ]
+- database explorer in sqlanydb-tools-vscode-extension                              [ ]
 
 # Installation
 
@@ -95,7 +109,7 @@ For sqlanydb-manager, rename `config.example.json` to `config.json` and fill it 
 
 ## Running the VSCode extension
 
-When working on this project in VSCode you can press `F5` to launch the extension in a new Extension Development Host window
+When working on this project in VSCode you can press `F5` to launch the extension in a new `Extension Development Host` window
 
 [(Back to top)](#table-of-contents)
 
