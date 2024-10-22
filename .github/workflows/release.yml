@@ -65,6 +65,7 @@ jobs:
             - name: List Files in Current Directory
               if: env.VSCODE_CHANGED == 'true'
               run: |
+                  cd ./apps/sqlanydb-tools-vscode
                   echo "Current Directory: $(pwd)"
                   ls -l
 
@@ -73,7 +74,7 @@ jobs:
               uses: svenstaro/upload-release-action@v2
               with:
                   repo_token: ${{ secrets.GITHUB_TOKEN }}
-                  file: ./sqlanydb-tools-vscode-*.vsix
+                  file: ./apps/sqlanydb-tools-vscode/sqlanydb-tools-vscode-*.vsix
                   tag: ${{ github.ref }}
                   overwrite: true
                   body: "Uploaded VSIX for PR #${{ github.event.pull_request.number }}."
