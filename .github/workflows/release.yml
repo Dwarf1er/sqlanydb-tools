@@ -65,7 +65,6 @@ jobs:
             - name: List Files in Current Directory
               if: env.VSCODE_CHANGED == 'true'
               run: |
-                  cd ./apps/sqlanydb-tools-vscode
                   echo "Current Directory: $(pwd)"
                   ls -l
 
