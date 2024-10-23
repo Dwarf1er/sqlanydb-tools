@@ -68,6 +68,7 @@ jobs:
               with:
                   file: ./apps/sqlanydb-tools-vscode/sqlanydb-tools-vscode-*.vsix
                   tags: false
+                  update_latest_release: true
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
