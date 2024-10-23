@@ -1,5 +1,11 @@
 # sqlanydb-tools-vscode
 
+## 1.0.1
+
+### Patch Changes
+
+- 9acd1f5: Fixed Webpack configuration to bundle internal dependencies with the .VSIX package
+
 ## 1.0.0
 
 ### Major Changes
