@@ -1,5 +1,11 @@
 # sqlanydb-tools-vscode
 
+## 1.0.2
+
+### Patch Changes
+
+- b81f3e2: Package.json config fix
+
 ## 1.0.1
 
 ### Patch Changes
