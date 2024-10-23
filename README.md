@@ -46,6 +46,10 @@ By bundling both command-line utilities and an integrated VSCode experience in a
 
 ## VSCode extension
 
+There are 2 ways to install the VSCode extension:
+1. Navigate to the `Extensions` tab in VSCode and search for `sqlanydb-tools-vscode`
+2. Download the VSIX file from the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=dwarf1er.sqlanydb-tools-vscode)
+
 ## sqlanydb-manager CLI
 
 [(Back to top)](#table-of-contents)
