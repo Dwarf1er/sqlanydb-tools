@@ -67,7 +67,7 @@ jobs:
               uses: xresloader/upload-to-github-release@v1
               with:
                   file: ./apps/sqlanydb-tools-vscode/sqlanydb-tools-vscode-*.vsix
-                  tags: true
+                  tags: false
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
