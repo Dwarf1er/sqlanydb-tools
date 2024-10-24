@@ -4,16 +4,13 @@
 		"target": "ES2022",
 		"lib": ["ES2022"],
 		"sourceMap": true,
-		"rootDir": "../../",
+		"rootDir": "src",
 		"outDir": "dist",
 		"strict": true,
 		"noImplicitReturns": true,
 		"noFallthroughCasesInSwitch": true,
 		"noUnusedParameters": true
 	},
-	"include": [
-		"../../apps/**/*",
-		"../../packages/**/*"
-	],
+	"include": ["src/**/*"],
 	"exclude": ["node_modules", "dist"]
 }
