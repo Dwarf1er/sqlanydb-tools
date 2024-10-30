@@ -120,3 +120,9 @@ When working on this project in VSCode you can press `F5` to launch the extensio
 # License
 
 This project is licensed under the [MIT License](LICENSE)
+
+# Acknowledgements
+
+- A massive shoutout to [alexandre-lavoie](https://github.com/alexandre-lavoie/) for rescuing me from the depths of my own misguided "brilliance"! Your help on restructuring this project transformed the chaos into something that actually works.
+
+Check out [alexandre-lavoie's](https://github.com/alexandre-lavoie/) awesome projects [here](https://github.com/alexandre-lavoie?tab=repositories)!

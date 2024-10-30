@@ -1,0 +1,24 @@
+{
+    "name": "@sqlanydb-tools/sqlanydb-manager",
+    "version": "1.0.0",
+    "private": "false",
+    "keywords": [],
+    "author": "",
+    "license": "MIT",
+    "description": "",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "scripts": {
+        "dev": "rollup --watch --config rollup.config.ts --bundleConfigAsCjs --configPlugin @rollup/plugin-typescript",
+        "build": "rollup --config rollup.config.ts --bundleConfigAsCjs --configPlugin @rollup/plugin-typescript"
+    },
+    "dependencies": {
+        "@sqlanydb-tools/sqlanydb-config": "*",
+        "unzipper": "^0.12.3"
+    },
+    "devDependencies": {
+        "@sqlanydb-tools/tsconfig": "*",
+        "@types/node": "20.x",
+        "@types/unzipper": "^0.10.10"
+    }
+}
