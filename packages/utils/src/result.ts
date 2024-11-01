@@ -13,6 +13,20 @@ class Result<T, E> {
         return new Result<never, E>(false, undefined, error);
     }
 
+    map<U>(fn: (value: T) => U): Result<U, E> {
+        if (this._ok) {
+            return Result.ok(fn(this._value!));
+        }
+        return Result.err(this._error!);
+    }
+
+    mapErr<F>(fn: (error: E) => F): Result<T, F> {
+        if (!this._ok) {
+            return Result.err(fn(this._error!));
+        }
+        return Result.ok(this._value!);
+    }
+
     get isOk(): boolean {
         return this._ok;
     }

@@ -1,0 +1,4 @@
+{
+    "extends": "@sqlanydb-tools/tsconfig/base.json",
+	"include": ["src", "rollup.config.ts"]
+}

@@ -4,8 +4,7 @@ import * as path from "path";
 import { promisify } from "util";
 
 import { DatabaseConfiguration, DatabaseConfigurationManager } from "@sqlanydb-tools/sqlanydb-config";
-
-import { Result, isErr, isOk } from "./result";
+import { Result, isErr, isOk } from "@sqlanydb-tools/sqlanydb-utils";
 
 export const startDatabase = async (
     databaseName: string,
@@ -45,13 +44,17 @@ export const stopDatabase = async (
     databaseName: string,
     databaseConfigurationManager: DatabaseConfigurationManager
 ): Promise<string> => {
-    const result = findDatabaseConfiguration(databaseName, databaseConfigurationManager);
+    const databaseConfigurationResult = findDatabaseConfiguration(databaseName, databaseConfigurationManager).map(
+        (databaseConfiguration) => {
+            return databaseConfiguration;
+        }
+    );
 
-    if (!isOk(result)) {
-        return `Error: ${result.error}`;
+    if (isErr(databaseConfigurationResult)) {
+        return "Error accessing database configuration";
     }
 
-    const databaseConfiguration = result.value;
+    const databaseConfiguration = databaseConfigurationResult.value;
 
     const commandResult = await executeCommand(`dbstop ${databaseConfiguration.name}`);
 

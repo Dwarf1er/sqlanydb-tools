@@ -1,5 +1,5 @@
 {
-    "name": "@sqlanydb-tools/sqlanydb-manager",
+    "name": "@sqlanydb-tools/sqlanydb-utils",
     "version": "1.0.0",
     "private": "false",
     "keywords": [],
@@ -11,13 +11,5 @@
     "scripts": {
         "dev": "rollup --watch --config rollup.config.ts --bundleConfigAsCjs --configPlugin @rollup/plugin-typescript",
         "build": "rollup --config rollup.config.ts --bundleConfigAsCjs --configPlugin @rollup/plugin-typescript"
-    },
-    "dependencies": {
-        "@sqlanydb-tools/sqlanydb-config": "*",
-        "@sqlanydb-tools/sqlanydb-utils": "*"
-    },
-    "devDependencies": {
-        "@sqlanydb-tools/tsconfig": "*",
-        "@types/node": "20.x"
     }
 }
