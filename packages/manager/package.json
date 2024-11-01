@@ -17,7 +17,6 @@
     },
     "devDependencies": {
         "@sqlanydb-tools/tsconfig": "*",
-        "@types/node": "20.x",
-        "@types/unzipper": "^0.10.10"
+        "@types/node": "20.x"
     }
 }
