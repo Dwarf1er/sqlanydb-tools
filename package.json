@@ -5,7 +5,6 @@
 		"dev": "turbo dev",
 		"build": "turbo build",
 		"package": "turbo package",
-		"lint": "turbo lint",
 		"format": "prettier --write \"**/*.{ts,tsx,md}\"",
 		"release": "changeset publish"
 	},

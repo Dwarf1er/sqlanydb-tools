@@ -7,8 +7,6 @@ import { RollupOptions } from "rollup";
 
 const production = !process.env.ROLLUP_WATCH;
 
-const emptyJSPath = path.resolve(__dirname, "src", "package", "empty.js");
-
 let resolveConfig: Record<string, any> = {};
 if (!production) {
     resolveConfig.resolveOnly = [/^@sqlanydb-tools/];
@@ -17,20 +15,14 @@ if (!production) {
 const config: RollupOptions = {
     input: "src/extension.ts",
     output: {
-        dir: "out",
+        dir: "dist",
         format: "cjs",
         sourcemap: !production,
         chunkFileNames: "[name].js",
-        manualChunks: (id: string) =>
-            id.includes("node_modules") ? "vendor" : undefined,
+        manualChunks: (id: string) => (id.includes("node_modules") ? "vendor" : undefined),
     },
     external: ["vscode"],
-    plugins: [
-        alias({ entries: [{ find: /^@aws-sdk.*/, replacement: emptyJSPath }] }),
-        resolve(resolveConfig),
-        typescript(),
-        commonjs(),
-    ],
+    plugins: [resolve(resolveConfig), typescript(), commonjs()],
 };
 
 export default config;

@@ -1,25 +1,25 @@
 {
-    "name": "@sqlanydb-tools/sqlanydb-config",
-    "version": "1.0.0",
-    "private": "false",
-    "keywords": [],
-    "author": "",
-    "license": "MIT",
-    "description": "",
-    "main": "dist/index.js",
-    "types": "dist/index.d.ts",
-    "scripts": {
-        "dev": "rollup --watch --config rollup.config.ts --bundleConfigAsCjs --configPlugin @rollup/plugin-typescript",
-        "build": "rollup --config rollup.config.ts --bundleConfigAsCjs --configPlugin @rollup/plugin-typescript"
-    },
-    "devDependencies": {
-        "@rollup/plugin-commonjs": "^28.0.1",
-        "@rollup/plugin-node-resolve": "^15.3.0",
-        "@rollup/plugin-typescript": "^12.1.1",
-        "@sqlanydb-tools/tsconfig": "*",
-        "@types/node": "20.x",
-        "rollup": "^4.24.0",
-        "ts-loader": "^9.5.1",
-        "typescript": "^5.5.4"
-    }
+	"name": "@sqlanydb-tools/sqlanydb-config",
+	"version": "1.0.0",
+	"private": "false",
+	"keywords": [],
+	"author": "",
+	"license": "MIT",
+	"description": "",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"scripts": {
+		"dev": "rollup --watch --config rollup.config.ts --bundleConfigAsCjs --configPlugin @rollup/plugin-typescript",
+		"build": "rollup --config rollup.config.ts --bundleConfigAsCjs --configPlugin @rollup/plugin-typescript"
+	},
+	"devDependencies": {
+		"@rollup/plugin-commonjs": "^28.0.1",
+		"@rollup/plugin-node-resolve": "^15.3.0",
+		"@rollup/plugin-typescript": "^12.1.1",
+		"@sqlanydb-tools/tsconfig": "*",
+		"@types/node": "20.x",
+		"rollup": "^4.24.0",
+		"ts-loader": "^9.5.1",
+		"typescript": "^5.5.4"
+	}
 }

@@ -1,23 +1,34 @@
 import * as vscode from "vscode";
-import { DatabaseTreeItem } from "./database-tree-item";
+
 import { DatabaseConfigurationManager } from "@sqlanydb-tools/sqlanydb-config";
 
-export class DatabaseTreeDataProvider implements vscode.TreeDataProvider<DatabaseTreeItem> {
-	private _onDidChangeTreeData: vscode.EventEmitter<void> = new vscode.EventEmitter<void>();
-	readonly onDidChangeTreeData: vscode.Event<void> = this._onDidChangeTreeData.event;
+import { DatabaseTreeItem } from "./database-tree-item";
 
-	constructor(private databaseConfigurationManager: DatabaseConfigurationManager) {}
+export class DatabaseTreeDataProvider
+    implements vscode.TreeDataProvider<DatabaseTreeItem>
+{
+    private _onDidChangeTreeData: vscode.EventEmitter<void> =
+        new vscode.EventEmitter<void>();
+    readonly onDidChangeTreeData: vscode.Event<void> =
+        this._onDidChangeTreeData.event;
 
-	getTreeItem(element: DatabaseTreeItem): vscode.TreeItem {
-		return element;
-	}
+    constructor(
+        private databaseConfigurationManager: DatabaseConfigurationManager
+    ) {}
 
-	getChildren(): DatabaseTreeItem[] {
-		const databases = this.databaseConfigurationManager.getDatabases();
-		return databases.map((databaseConfiguration) => new DatabaseTreeItem(databaseConfiguration));
-	}
+    getTreeItem(element: DatabaseTreeItem): vscode.TreeItem {
+        return element;
+    }
 
-	refresh() {
-		this._onDidChangeTreeData.fire();
-	}
+    getChildren(): DatabaseTreeItem[] {
+        const databases = this.databaseConfigurationManager.getDatabases();
+        return databases.map(
+            (databaseConfiguration) =>
+                new DatabaseTreeItem(databaseConfiguration)
+        );
+    }
+
+    refresh() {
+        this._onDidChangeTreeData.fire();
+    }
 }
