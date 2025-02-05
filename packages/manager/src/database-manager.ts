@@ -9,12 +9,11 @@ import { Result, isErr, isOk } from "@sqlanydb-tools/sqlanydb-utils";
 export const startDatabase = async (
     databaseName: string,
     databaseConfigurationManager: DatabaseConfigurationManager
-): Promise<void> => {
+): Promise<Result<string, string>> => {
     const configurationResult = findDatabaseConfiguration(databaseName, databaseConfigurationManager);
 
-    if (!isOk(configurationResult)) {
-        console.error("Error:", configurationResult.error);
-        return;
+    if (isErr(configurationResult)) {
+        return Result.err(`Error: ${configurationResult.error}`);
     }
 
     const databaseConfiguration = configurationResult.value;
@@ -37,13 +36,18 @@ export const startDatabase = async (
 
     const command = commandParts.join(" ");
 
-    await executeDetachedCommand(command);
+    try {
+        await executeDetachedCommand(command);
+        return Result.ok(`Database ${databaseName} started successfully.`);
+    } catch (error) {
+        return Result.err(`Error starting database: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
 };
 
 export const stopDatabase = async (
     databaseName: string,
     databaseConfigurationManager: DatabaseConfigurationManager
-): Promise<string> => {
+): Promise<Result<string, string>> => {
     const databaseConfigurationResult = findDatabaseConfiguration(databaseName, databaseConfigurationManager).map(
         (databaseConfiguration) => {
             return databaseConfiguration;
@@ -51,7 +55,7 @@ export const stopDatabase = async (
     );
 
     if (isErr(databaseConfigurationResult)) {
-        return "Error accessing database configuration";
+        return Result.err("Error accessing database configuration");
     }
 
     const databaseConfiguration = databaseConfigurationResult.value;
@@ -59,16 +63,16 @@ export const stopDatabase = async (
     const commandResult = await executeCommand(`dbstop ${databaseConfiguration.name}`);
 
     if (isOk(commandResult)) {
-        return commandResult.value;
+        return Result.ok(commandResult.value);
     } else {
-        return commandResult.error;
+        return Result.err(commandResult.error);
     }
 };
 
 // TODO - rewrite from scratch
 export const resetDatabase = async () //databaseName: string,
-//databaseConfigurationManager: DatabaseConfigurationManager
-: Promise<string> => {
+    //databaseConfigurationManager: DatabaseConfigurationManager
+    : Promise<string> => {
     return "";
 };
 
@@ -104,12 +108,11 @@ const executeDetachedCommand = (command: string): void => {
 export const pingDatabase = async (
     databaseName: string,
     databaseConfigurationManager: DatabaseConfigurationManager
-): Promise<boolean> => {
+): Promise<Result<boolean, string>> => {
     const configurationResult = findDatabaseConfiguration(databaseName, databaseConfigurationManager);
 
-    if (!isOk(configurationResult)) {
-        console.error(`Error retrieving database configuration: ${configurationResult.error}`);
-        return false;
+    if (isErr(configurationResult)) {
+        return Result.err(`Error retrieving database configuration: ${configurationResult.error}`);
     }
 
     const databaseConfiguration = configurationResult.value;
@@ -119,10 +122,9 @@ export const pingDatabase = async (
     const commandResult = await executeCommand(pingCommand);
 
     if (isOk(commandResult)) {
-        return commandResult.value.includes("Ping server successful.");
+        return Result.ok(commandResult.value.includes("Ping server successful."));
     } else {
-        console.error(`Ping failed for database ${databaseName}: ${commandResult.error}`);
-        return false;
+        return Result.err(`Ping failed for database ${databaseName}: ${commandResult.error}`);
     }
 };
 
@@ -133,18 +135,18 @@ export const pingDatabaseWithRetry = async (
     databaseName: string,
     databaseConfigurationManager: DatabaseConfigurationManager,
     retries: number = 3
-): Promise<boolean> => {
+): Promise<Result<boolean, string>> => {
     for (let attempt = 0; attempt < retries; attempt++) {
         const databaseIsRunning = await pingDatabase(databaseName, databaseConfigurationManager);
         if (databaseIsRunning) {
-            return true;
+            return Result.ok(true);
         }
 
         const waitTime = exponentialBackoff(attempt);
         await delay(waitTime);
     }
 
-    return false;
+    return Result.err(`Failed to ping the database ${databaseName} after ${retries} retries.`);
 };
 
 const findDatabaseConfiguration = (

@@ -24,8 +24,8 @@ export async function resetDatabaseCommand(
                     },
                     async () => {
                         await resetDatabase(
-                            databaseName,
-                            databaseConfigurationManager
+                            //databaseName,
+                            //databaseConfigurationManager
                         );
                         await checkAndUpdateDatabaseStatus(
                             treeDataProvider,

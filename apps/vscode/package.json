@@ -82,6 +82,7 @@
                 "sqlanydb-tools-vscode.database": {
                     "type": "object",
                     "default": {
+                        "displayName": "Test Database 1",
                         "name": "TestDatabase1",
                         "path": "/path/to/test/TestDatabase1/root/directory",
                         "archivePath": "/path/to/archive/database1.zip",
@@ -91,6 +92,10 @@
                     },
                     "description": "Database configuration",
                     "properties": {
+                        "displayName": {
+                            "type": "string",
+                            "description": "The name you want to be displayed in the UI"
+                        },
                         "name": {
                             "type": "string",
                             "description": "The name of the database file, without the .db extension"
