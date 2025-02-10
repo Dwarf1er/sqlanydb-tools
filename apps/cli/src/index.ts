@@ -2,6 +2,7 @@ import { Command } from "commander";
 import * as fs from "fs";
 import * as path from "path";
 
+import { isOk, isErr } from "@sqlanydb-tools/sqlanydb-utils";
 import { DatabaseConfigurationManager } from "@sqlanydb-tools/sqlanydb-config";
 import {
     listDatabase,
@@ -32,36 +33,28 @@ program
     .version("0.0.1");
 
 program
-    .command("start <databaseName>")
+    .command("start <databaseDisplayName>")
     .description("Start a database")
-    .action(async (databaseName) => {
-        try {
-            await startDatabase(databaseName, databaseConfigurationManager);
-        } catch (error) {
-            if (error instanceof Error) {
-                console.error(error.message);
-            } else {
-                console.error("An unknown error occurred.");
-            }
+    .action(async (databaseDisplayName) => {
+        const result = await startDatabase(databaseDisplayName, databaseConfigurationManager);
+
+        if (isOk(result)) {
+            console.log(result.value);
+        } else {
+            console.error(result.error);
         }
     });
 
 program
-    .command("stop <databaseName>")
+    .command("stop <databaseDisplayName>")
     .description("Stop a database")
-    .action(async (databaseName) => {
-        try {
-            const result = await stopDatabase(
-                databaseName,
-                databaseConfigurationManager
-            );
-            console.log(result);
-        } catch (error) {
-            if (error instanceof Error) {
-                console.error(error.message);
-            } else {
-                console.error("An unknown error occurred.");
-            }
+    .action(async (databaseDisplayName) => {
+        const result = await stopDatabase(databaseDisplayName, databaseConfigurationManager);
+
+        if (isOk(result)) {
+            console.log(result.value);
+        } else {
+            console.error(result.error);
         }
     });
 
@@ -93,32 +86,21 @@ program
     });
 
 program
-    .command("ping <databaseName>")
+    .command("ping <databaseDisplayName>")
     .description("Ping a database to check if it's running")
     .option("-r, --retry", "Use retry logic to check the database status")
-    .action(async (databaseName, options) => {
+    .action(async (databaseDisplayName, options) => {
         const useRetry = options.retry || false;
+        const result = useRetry
+            ? await pingDatabaseWithRetry(databaseDisplayName, databaseConfigurationManager)
+            : await pingDatabase(databaseDisplayName, databaseConfigurationManager);
 
-        try {
-            const isRunning = useRetry
-                ? await pingDatabaseWithRetry(
-                    databaseName,
-                    databaseConfigurationManager
-                )
-                : await pingDatabase(
-                    databaseName,
-                    databaseConfigurationManager
-                );
-
+        if (isOk(result)) {
             console.log(
-                `Database ${databaseName} is ${isRunning ? "running" : "not reachable"}.`
+                `Database ${databaseDisplayName} is ${result.value ? "running" : "not reachable"}.`
             );
-        } catch (error) {
-            console.error(
-                error instanceof Error
-                    ? error.message
-                    : "An unknown error occurred."
-            );
+        } else {
+            console.error(result.error);
         }
     });
 

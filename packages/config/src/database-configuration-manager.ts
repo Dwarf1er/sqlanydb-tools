@@ -6,13 +6,13 @@ export class DatabaseConfigurationManager {
     private configurationPath: string;
     private configuration: DatabaseConfiguration[];
 
-    constructor(configurationPath: string = "", workspaceSettings: DatabaseConfiguration[] = []) {
+    constructor(configurationPath: string = "", workspaceSettings: DatabaseConfiguration | null = null) {
         this.configurationPath = configurationPath;
-        this.configuration = workspaceSettings.length > 0 ? workspaceSettings : this.loadConfiguration();
+        this.configuration = workspaceSettings ? [workspaceSettings] : this.loadConfiguration();
     }
 
-    public updateConfiguration(newConfiguration: DatabaseConfiguration[]): void {
-        this.configuration = newConfiguration;
+    public updateConfiguration(newConfiguration: DatabaseConfiguration): void {
+        this.configuration = [newConfiguration];
     }
 
     public getDatabases(): DatabaseConfiguration[] {

@@ -141,7 +141,8 @@
     },
     "dependencies": {
         "@sqlanydb-tools/sqlanydb-config": "*",
-        "@sqlanydb-tools/sqlanydb-manager": "*"
+        "@sqlanydb-tools/sqlanydb-manager": "*",
+        "@sqlanydb-tools/sqlanydb-utils": "*"
     },
     "devDependencies": {
         "@rollup/plugin-alias": "^5.1.1",

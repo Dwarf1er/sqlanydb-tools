@@ -7,10 +7,10 @@ import { DatabaseConfiguration, DatabaseConfigurationManager } from "@sqlanydb-t
 import { Result, isErr, isOk } from "@sqlanydb-tools/sqlanydb-utils";
 
 export const startDatabase = async (
-    databaseName: string,
+    databaseDisplayName: string,
     databaseConfigurationManager: DatabaseConfigurationManager
 ): Promise<Result<string, string>> => {
-    const configurationResult = findDatabaseConfiguration(databaseName, databaseConfigurationManager);
+    const configurationResult = findDatabaseConfiguration(databaseDisplayName, databaseConfigurationManager);
 
     if (isErr(configurationResult)) {
         return Result.err(`Error: ${configurationResult.error}`);
@@ -19,7 +19,7 @@ export const startDatabase = async (
     const databaseConfiguration = configurationResult.value;
 
     const commandParts: string[] = [
-        `dbeng17 "${path.join(databaseConfiguration.path, databaseConfiguration.name + ".db")}" -n ${databaseConfiguration.name}`,
+        `dbeng17 "${path.join(databaseConfiguration.path, databaseConfiguration.name + ".db")}" -n ${databaseConfiguration.displayName}`,
     ];
 
     if (databaseConfiguration.serverPort) {
@@ -27,7 +27,7 @@ export const startDatabase = async (
     }
 
     if (databaseConfiguration.httpPort) {
-        commandParts.push(`-xs http(port=${databaseConfiguration.httpPort};dbn=${databaseConfiguration.name})`);
+        commandParts.push(`-xs http(port=${databaseConfiguration.httpPort};dbn=${databaseConfiguration.displayName})`);
     }
 
     if (databaseConfiguration.cacheSize) {
@@ -38,17 +38,17 @@ export const startDatabase = async (
 
     try {
         await executeDetachedCommand(command);
-        return Result.ok(`Database ${databaseName} started successfully.`);
+        return Result.ok(`Database ${databaseDisplayName} started successfully.`);
     } catch (error) {
         return Result.err(`Error starting database: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
 };
 
 export const stopDatabase = async (
-    databaseName: string,
+    databaseDisplayName: string,
     databaseConfigurationManager: DatabaseConfigurationManager
 ): Promise<Result<string, string>> => {
-    const databaseConfigurationResult = findDatabaseConfiguration(databaseName, databaseConfigurationManager).map(
+    const databaseConfigurationResult = findDatabaseConfiguration(databaseDisplayName, databaseConfigurationManager).map(
         (databaseConfiguration) => {
             return databaseConfiguration;
         }
@@ -60,7 +60,7 @@ export const stopDatabase = async (
 
     const databaseConfiguration = databaseConfigurationResult.value;
 
-    const commandResult = await executeCommand(`dbstop ${databaseConfiguration.name}`);
+    const commandResult = await executeCommand(`dbstop ${databaseConfiguration.displayName}`);
 
     if (isOk(commandResult)) {
         return Result.ok(commandResult.value);
@@ -106,10 +106,10 @@ const executeDetachedCommand = (command: string): void => {
 };
 
 export const pingDatabase = async (
-    databaseName: string,
+    databaseDisplayName: string,
     databaseConfigurationManager: DatabaseConfigurationManager
 ): Promise<Result<boolean, string>> => {
-    const configurationResult = findDatabaseConfiguration(databaseName, databaseConfigurationManager);
+    const configurationResult = findDatabaseConfiguration(databaseDisplayName, databaseConfigurationManager);
 
     if (isErr(configurationResult)) {
         return Result.err(`Error retrieving database configuration: ${configurationResult.error}`);
@@ -117,14 +117,21 @@ export const pingDatabase = async (
 
     const databaseConfiguration = configurationResult.value;
 
-    const pingCommand = `dbping -c "DBN=${databaseConfiguration.name}"`;
+    const pingCommand = `dbping -c "DBN=${databaseConfiguration.displayName}"`;
 
     const commandResult = await executeCommand(pingCommand);
 
     if (isOk(commandResult)) {
-        return Result.ok(commandResult.value.includes("Ping server successful."));
+        if (
+            commandResult.value.includes("Ping server successful.") || 
+            commandResult.value.includes("Ping du serveur réussi.")
+        ) {
+            return Result.ok(true);
+        } else {
+            return Result.ok(false);
+        }
     } else {
-        return Result.err(`Ping failed for database ${databaseName}: ${commandResult.error}`);
+        return Result.err(`Ping failed for database ${databaseDisplayName}: ${commandResult.error}`);
     }
 };
 
@@ -132,13 +139,14 @@ const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 const exponentialBackoff = (attempt: number) => Math.min(10000, Math.pow(2, attempt) * 100);
 
 export const pingDatabaseWithRetry = async (
-    databaseName: string,
+    databaseDisplayName: string,
     databaseConfigurationManager: DatabaseConfigurationManager,
     retries: number = 3
 ): Promise<Result<boolean, string>> => {
     for (let attempt = 0; attempt < retries; attempt++) {
-        const databaseIsRunning = await pingDatabase(databaseName, databaseConfigurationManager);
-        if (databaseIsRunning) {
+        const pingCommandResult = await pingDatabase(databaseDisplayName, databaseConfigurationManager);
+
+        if(isOk(pingCommandResult) && pingCommandResult.value) {
             return Result.ok(true);
         }
 
@@ -146,19 +154,19 @@ export const pingDatabaseWithRetry = async (
         await delay(waitTime);
     }
 
-    return Result.err(`Failed to ping the database ${databaseName} after ${retries} retries.`);
+    return Result.ok(false);
 };
 
 const findDatabaseConfiguration = (
-    databaseName: string,
+    databaseDisplayName: string,
     databaseConfigurationManager: DatabaseConfigurationManager
 ): Result<DatabaseConfiguration, string> => {
     const databases = databaseConfigurationManager.getDatabases();
-    const database = databases.find((d) => d.name === databaseName);
+    const database = databases.find((d) => d.displayName === databaseDisplayName);
 
     if (database) {
         return Result.ok(database);
     }
 
-    return Result.err(`Database ${databaseName} not found.`);
+    return Result.err(`Database ${databaseDisplayName} not found.`);
 };

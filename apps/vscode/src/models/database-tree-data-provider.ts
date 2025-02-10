@@ -3,6 +3,7 @@ import * as vscode from "vscode";
 import { DatabaseConfigurationManager } from "@sqlanydb-tools/sqlanydb-config";
 
 import { DatabaseTreeItem } from "./database-tree-item";
+import { stringify } from "querystring";
 
 export class DatabaseTreeDataProvider
     implements vscode.TreeDataProvider<DatabaseTreeItem>
@@ -21,11 +22,8 @@ export class DatabaseTreeDataProvider
     }
 
     getChildren(): DatabaseTreeItem[] {
-        const databases = this.databaseConfigurationManager.getDatabases();
-        return databases.map(
-            (databaseConfiguration) =>
-                new DatabaseTreeItem(databaseConfiguration)
-        );
+        const database = this.databaseConfigurationManager.getDatabases();
+        return database.map((databaseConfiguration) => new DatabaseTreeItem(databaseConfiguration));
     }
 
     refresh() {

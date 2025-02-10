@@ -50,3 +50,6 @@ apps/sqlanydb-manager/src/config.json
 .history/
 .history
 .ionide
+
+# CLI config
+apps/cli/src/config.json

@@ -7,6 +7,6 @@
 	"license": "MIT",
 	"description": "",
 	"exports": {
-		"./base.json": "./tsconfig.base.json"
+		"./tsconfig.base.json": "./tsconfig.base.json"
 	}
 }
