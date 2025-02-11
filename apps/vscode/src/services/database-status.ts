@@ -17,7 +17,6 @@ export async function checkAndUpdateDatabaseStatus(
 
         if (isOk(result)) {
             const databaseIsRunning = result.value;
-            vscode.window.showInformationMessage("ping result: " + databaseIsRunning);
             vscode.commands.executeCommand(
                 "setContext",
                 "sqlanydb-tools-vscode.databaseIsRunning",

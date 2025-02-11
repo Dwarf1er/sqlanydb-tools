@@ -1,9 +1,6 @@
 import * as vscode from "vscode";
-
 import { DatabaseConfigurationManager } from "@sqlanydb-tools/sqlanydb-config";
-
 import { DatabaseTreeItem } from "./database-tree-item";
-import { stringify } from "querystring";
 
 export class DatabaseTreeDataProvider
     implements vscode.TreeDataProvider<DatabaseTreeItem>

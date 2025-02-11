@@ -121,17 +121,10 @@ export const pingDatabase = async (
 
     const commandResult = await executeCommand(pingCommand);
 
-    if (isOk(commandResult)) {
-        if (
-            commandResult.value.includes("Ping server successful.") || 
-            commandResult.value.includes("Ping du serveur réussi.")
-        ) {
-            return Result.ok(true);
-        } else {
-            return Result.ok(false);
-        }
+    if (isOk(commandResult) && (commandResult.value.includes("Ping server successful.") || commandResult.value.includes("Ping du serveur réussi."))) {
+        return Result.ok(true);
     } else {
-        return Result.err(`Ping failed for database ${databaseDisplayName}: ${commandResult.error}`);
+        return Result.ok(false);
     }
 };
 
@@ -141,20 +134,18 @@ const exponentialBackoff = (attempt: number) => Math.min(10000, Math.pow(2, atte
 export const pingDatabaseWithRetry = async (
     databaseDisplayName: string,
     databaseConfigurationManager: DatabaseConfigurationManager,
-    retries: number = 3
+    retries: number = 5
 ): Promise<Result<boolean, string>> => {
-    for (let attempt = 0; attempt < retries; attempt++) {
-        const pingCommandResult = await pingDatabase(databaseDisplayName, databaseConfigurationManager);
+    let pingCommandResult: Result<boolean, string> = Result.ok(false);
 
-        if(isOk(pingCommandResult) && pingCommandResult.value) {
-            return Result.ok(true);
-        }
+    for (let attempt = 0; attempt < retries; attempt++) {
+        pingCommandResult = await pingDatabase(databaseDisplayName, databaseConfigurationManager);
 
         const waitTime = exponentialBackoff(attempt);
         await delay(waitTime);
     }
 
-    return Result.ok(false);
+    return pingCommandResult;
 };
 
 const findDatabaseConfiguration = (
