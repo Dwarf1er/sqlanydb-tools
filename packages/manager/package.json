@@ -1,6 +1,6 @@
 {
-    "name": "@sqlanydb-tools/sqlanydb-manager",
-    "version": "2.0.0",
+    "name": "@sqlanydb-tools/manager",
+    "version": "0.0.0",
     "private": "false",
     "keywords": [],
     "author": "",

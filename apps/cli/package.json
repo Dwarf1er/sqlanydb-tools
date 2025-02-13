@@ -1,6 +1,6 @@
 {
-	"name": "@sqlanydb-tools/cli",
-	"version": "2.0.0",
+	"name": "@sqlanydb-tools/sqlanydb-manager",
+	"version": "1.0.0",
 	"keywords": [],
 	"author": "",
 	"license": "MIT",
