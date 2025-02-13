@@ -1,11 +1,5 @@
 # @sqlanydb-tools/sqlanydb-config
 
-## 2.0.0
-
-### Major Changes
-
--   caeb035: Changed bundler from WebPack to Rollup and implemented Result<T,E> pattern for error handling
-
 ## 1.0.0
 
 ### Major Changes
