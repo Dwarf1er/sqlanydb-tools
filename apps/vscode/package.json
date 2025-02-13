@@ -1,0 +1,160 @@
+{
+    "name": "sqlanydb-tools-vscode",
+    "displayName": "sqlanydb-tools-vscode",
+    "description": "Manage SAP SQL Anwyhere 17 Databases from VSCode",
+    "icon": "resources/sqlanydb-tools-logo.png",
+    "license": "MIT",
+    "publisher": "dwarf1er",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Dwarf1er/sqlanydb-tools",
+        "directory": "apps/sqlanydb-tools-vscode"
+    },
+    "version": "1.0.1",
+    "private": "true",
+    "main": "dist/extension.js",
+    "engines": {
+        "vscode": "^1.93.0"
+    },
+    "categories": [
+        "Programming Languages"
+    ],
+    "activationEvents": [],
+    "contributes": {
+        "commands": [
+            {
+                "command": "sqlanydb-tools-vscode.startDatabase",
+                "title": "Start Database",
+                "icon": "$(debug-start)"
+            },
+            {
+                "command": "sqlanydb-tools-vscode.stopDatabase",
+                "title": "Stop Database",
+                "icon": "$(debug-stop)"
+            },
+            {
+                "command": "sqlanydb-tools-vscode.resetDatabase",
+                "title": "Reset Database",
+                "icon": "$(refresh)"
+            }
+        ],
+        "menus": {
+            "view/title": [
+                {
+                    "command": "sqlanydb-tools-vscode.startDatabase",
+                    "when": "view == sqlanydb-manager && !sqlanydb-tools-vscode.databaseIsRunning",
+                    "group": "navigation"
+                },
+                {
+                    "command": "sqlanydb-tools-vscode.stopDatabase",
+                    "when": "view == sqlanydb-manager && sqlanydb-tools-vscode.databaseIsRunning",
+                    "group": "navigation"
+                },
+                {
+                    "command": "sqlanydb-tools-vscode.resetDatabase",
+                    "when": "view == sqlanydb-manager",
+                    "group": "navigation"
+                }
+            ]
+        },
+        "viewsContainers": {
+            "activitybar": [
+                {
+                    "id": "sqlanydb-tools",
+                    "title": "SQL Anywhere Tools",
+                    "icon": "resources/sqlanydb-tools.svg"
+                }
+            ]
+        },
+        "views": {
+            "sqlanydb-tools": [
+                {
+                    "id": "sqlanydb-manager",
+                    "name": "Database Manager",
+                    "type": "tree"
+                }
+            ]
+        },
+        "configuration": {
+            "type": "object",
+            "title": "SAP SQL Anywhere 17 Tools",
+            "properties": {
+                "sqlanydb-tools-vscode.database": {
+                    "type": "object",
+                    "default": {
+                        "displayName": "Test Database 1",
+                        "name": "TestDatabase1",
+                        "path": "/path/to/test/TestDatabase1/root/directory",
+                        "archivePath": "/path/to/archive/database1.zip",
+                        "serverPort": "1234",
+                        "httpPort": "8080",
+                        "cacheSize": "256M"
+                    },
+                    "description": "Database configuration",
+                    "properties": {
+                        "displayName": {
+                            "type": "string",
+                            "description": "The name you want to be displayed in the UI"
+                        },
+                        "name": {
+                            "type": "string",
+                            "description": "The name of the database file, without the .db extension"
+                        },
+                        "path": {
+                            "type": "string",
+                            "description": "The path to the root directory containing the database .db file"
+                        },
+                        "archivePath": {
+                            "type": "string",
+                            "description": "The path to the .zip archive file, will be used to reset the database to a previous state"
+                        },
+                        "serverPort": {
+                            "type": "string",
+                            "description": "The server port for the database"
+                        },
+                        "httpPort": {
+                            "type": "string",
+                            "description": "The HTTP port for the database"
+                        },
+                        "cacheSize": {
+                            "type": "string",
+                            "description": "The cache size in bytes for the database, may be defined as: xxxK, xxxM, xxxG, or xxxP"
+                        }
+                    },
+                    "required": [
+                        "name",
+                        "path"
+                    ],
+                    "additionalProperties": false
+                }
+            }
+        }
+    },
+    "scripts": {
+        "dev": "rollup --watch --config rollup.config.ts --bundleConfigAsCjs --configPlugin @rollup/plugin-typescript",
+        "build": "rollup --config rollup.config.ts --bundleConfigAsCjs --configPlugin @rollup/plugin-typescript",
+        "package": "vsce package --out dist",
+        "publish": "vsce publish -p $VSCE_TOKEN"
+    },
+    "vsce": {
+        "dependencies": false
+    },
+    "dependencies": {
+        "@sqlanydb-tools/sqlanydb-config": "*",
+        "@sqlanydb-tools/sqlanydb-manager": "*",
+        "@sqlanydb-tools/sqlanydb-utils": "*"
+    },
+    "devDependencies": {
+        "@rollup/plugin-alias": "^5.1.1",
+        "@rollup/plugin-commonjs": "^28.0.1",
+        "@rollup/plugin-node-resolve": "^15.3.0",
+        "@rollup/plugin-typescript": "^12.1.1",
+        "@sqlanydb-tools/tsconfig": "*",
+        "@types/node": "20.x",
+        "@types/vscode": "^1.93.0",
+        "@vscode/vsce": "^3.1.1",
+        "rollup": "^4.24.0",
+        "ts-loader": "^9.5.1",
+        "typescript": "^5.5.4"
+    }
+}

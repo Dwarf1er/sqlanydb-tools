@@ -1,0 +1,11 @@
+{
+    "plugins": ["@trivago/prettier-plugin-sort-imports"],
+    "printWidth": 120,
+    "trailingComma": "es5",
+    "tabWidth": 4,
+    "semi": true,
+    "singleQuote": false,
+    "importOrder": ["^@sqlanydb-tools/(.*)$", "^[./]"],
+    "importOrderSeparation": true,
+    "importOrderSortSpecifiers": true
+}

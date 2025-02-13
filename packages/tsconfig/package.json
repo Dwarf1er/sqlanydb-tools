@@ -1,0 +1,12 @@
+{
+	"name": "@sqlanydb-tools/tsconfig",
+	"version": "1.0.0",
+	"private": "false",
+	"keywords": [],
+	"author": "",
+	"license": "MIT",
+	"description": "",
+	"exports": {
+		"./tsconfig.base.json": "./tsconfig.base.json"
+	}
+}

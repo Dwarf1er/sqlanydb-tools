@@ -1,0 +1,8 @@
+.vscode/**
+.turbo/**
+node_modules/**
+src/**
+**/*.map
+.gitignore
+tsconfig.json
+rollup.config.ts

@@ -1,17 +1,15 @@
 {
-	"version": "0.2.0",
-	"configurations": [
-		{
-			"name": "Run Extension",
-			"type": "extensionHost",
-			"request": "launch",
-			"args": [
-				"--extensionDevelopmentPath=${workspaceFolder}/apps/sqlanydb-tools-vscode"
-			],
-			"outFiles": [
-				"${workspaceFolder}/apps/sqlanydb-tools-vscode/dist/**/*.js"
-			],
-			"preLaunchTask": "${defaultBuildTask}"
-		}
-	]
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Run Extension",
+            "type": "extensionHost",
+            "request": "launch",
+            "args": [
+                "--extensionDevelopmentPath=${workspaceFolder}/apps/vscode"
+            ],
+            "outFiles": ["${workspaceFolder}/apps/vscode/dist/**/*.js"],
+            "preLaunchTask": "npm: build"
+        }
+    ]
 }
