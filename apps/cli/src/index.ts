@@ -58,24 +58,18 @@ program
         }
     });
 
-// program
-//     .command("reset <databaseName>")
-//     .description("Reset a database from its archive")
-//     .action(async (databaseName) => {
-//         try {
-//             const result = await resetDatabase(
-//                 databaseName,
-//                 databaseConfigurationManager
-//             );
-//             console.log(result);
-//         } catch (error) {
-//             if (error instanceof Error) {
-//                 console.error(error.message);
-//             } else {
-//                 console.error("An unknown error occurred.");
-//             }
-//         }
-//     });
+program
+    .command("reset <databaseName>")
+    .description("Reset a database from its archive")
+    .action(async (databaseDisplayName) => {
+        const result = await resetDatabase(databaseDisplayName, databaseConfigurationManager);
+
+        if (isOk(result)) {
+            console.log(result.value);
+        } else {
+            console.error(result.error);
+        }
+    });
 
 program
     .command("list")

@@ -31,15 +31,16 @@ export async function startDatabaseCommand(
 
                         if (isOk(result)) {
                             vscode.window.showInformationMessage(`Database '${databaseDisplayName}' started successfully.`);
-                            await checkAndUpdateDatabaseStatus(
-                                treeDataProvider,
-                                databaseConfigurationManager
-                            );
                         } else {
                             vscode.window.showErrorMessage(
                                 `Error starting database '${databaseDisplayName}': ${result.error}`
                             );
                         }
+
+                        await checkAndUpdateDatabaseStatus(
+                            treeDataProvider,
+                            databaseConfigurationManager
+                        );
                     }
                 );
             } else {

@@ -1,6 +1,7 @@
 import { exec, spawn } from "child_process";
 import * as fs from "fs";
 import * as path from "path";
+import StreamZip from "node-stream-zip";
 import { promisify } from "util";
 
 import { DatabaseConfiguration, DatabaseConfigurationManager } from "@sqlanydb-tools/sqlanydb-config";
@@ -60,7 +61,7 @@ export const stopDatabase = async (
 
     const databaseConfiguration = databaseConfigurationResult.value;
 
-    const commandResult = await executeCommand(`dbstop ${databaseConfiguration.displayName}`);
+    const commandResult = await executeCommand(`dbstop ${databaseConfiguration.displayName} -y`);
 
     if (isOk(commandResult)) {
         return Result.ok(commandResult.value);
@@ -69,11 +70,81 @@ export const stopDatabase = async (
     }
 };
 
-// TODO - rewrite from scratch
-export const resetDatabase = async () //databaseName: string,
-    //databaseConfigurationManager: DatabaseConfigurationManager
-    : Promise<string> => {
-    return "";
+export const resetDatabase = async (
+    databaseDisplayName: string,
+    databaseConfigurationManager: DatabaseConfigurationManager
+): Promise<Result<string, string>> => {
+    const configurationResult = findDatabaseConfiguration(databaseDisplayName, databaseConfigurationManager);
+
+    if (isErr(configurationResult)) {
+        return Result.err(`Error: ${configurationResult.error}`);
+    }
+
+    const databaseConfiguration = configurationResult.value;
+
+    let archivePath: string;
+    if(databaseConfiguration.archivePath) {
+        archivePath = databaseConfiguration.archivePath;
+    } else {
+        return Result.err("Error: Archive path not found in database configuration.");
+    }
+
+    if (!fs.existsSync(archivePath)) {
+        return Result.err("Error: Archive file not found.");
+    }
+
+    await stopDatabase(databaseDisplayName, databaseConfigurationManager);
+
+    const deleteFilesResult = deleteDatabaseFiles(databaseConfiguration.path);
+    if (isErr(deleteFilesResult)) {
+        return Result.err(deleteFilesResult.error);
+    }
+
+    await extractArchive(archivePath, databaseConfiguration);
+
+    return Result.ok("Database reset from archive successfully.");
+};
+
+const deleteDatabaseFiles = (databaseDir: string): Result<boolean, string> => {
+    try {
+        const files = fs.readdirSync(databaseDir);
+        for (const file of files) {
+            const filePath = path.join(databaseDir, file);
+            if (fs.statSync(filePath).isFile() && !(path.extname(file).toLowerCase() === '.exe' || path.extname(file).toLowerCase() === '.zip')) {
+                
+                fs.unlinkSync(filePath);
+            }
+        }
+        return Result.ok(true);
+    } catch (error) {
+        return Result.err(`Error deleting database files: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+};
+
+const extractArchive = async (archivePath: string, databaseConfiguration: DatabaseConfiguration): Promise<Result<string, string>> => {
+    const fileExtension = path.extname(archivePath).toLowerCase();
+    const filePath = path.join(databaseConfiguration.path, databaseConfiguration.name + ".db");
+
+    if (fileExtension === ".exe") {
+        const commandResult = await executeCommand(`7z x "${archivePath}" -so > ${filePath}`);
+        if (isOk(commandResult)) {
+            return Result.ok(commandResult.value);
+        } else {
+            return Result.err(commandResult.error);
+        }
+    }
+
+    if (fileExtension === ".zip") {
+        const zip = new StreamZip.async({ file: archivePath });
+        const entries = await zip.entries();
+        const firstEntryName = Object.keys(entries)[0];
+        await zip.extract(firstEntryName, filePath);
+        await zip.close();
+
+        return Result.ok("Database reset successfully.");
+    }
+
+    return Result.err("Database not reset.");
 };
 
 export const listDatabase = (databaseConfigurationManager: DatabaseConfigurationManager) => {
@@ -84,6 +155,7 @@ const execAsync = promisify(exec);
 
 const executeCommand = async (command: string): Promise<Result<string, string>> => {
     try {
+        console.log(command);
         const { stdout } = await execAsync(command);
         return Result.ok(stdout);
     } catch (error) {

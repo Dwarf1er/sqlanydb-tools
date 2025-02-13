@@ -14,7 +14,8 @@
     },
     "dependencies": {
         "@sqlanydb-tools/sqlanydb-config": "*",
-        "@sqlanydb-tools/sqlanydb-utils": "*"
+        "@sqlanydb-tools/sqlanydb-utils": "*",
+        "node-stream-zip": "^1.15.0"
     },
     "devDependencies": {
         "@sqlanydb-tools/tsconfig": "*",
