@@ -9,17 +9,5 @@
 ### Patch Changes
 
 -   Updated dependencies [caeb035]
-    -   @sqlanydb-tools/sqlanydb-manager@2.0.0
     -   @sqlanydb-tools/sqlanydb-config@2.0.0
     -   @sqlanydb-tools/sqlanydb-utils@2.0.0
-
-## 1.0.0
-
-### Major Changes
-
--   ad19345: Initial release
-
-### Patch Changes
-
--   Updated dependencies [ad19345]
-    -   @sqlanydb-tools/sqlanydb-config@1.0.0
